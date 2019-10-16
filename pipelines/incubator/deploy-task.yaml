@@ -11,6 +11,7 @@ spec:
       - name: docker-image
         type: image
     params:
+      - name: event-type
       - name: repository-name
         default: CollectionId
       - name: app-deploy-file-name
@@ -22,6 +23,9 @@ spec:
       args:
         - -cex
         - |
+          if [ ${inputs.params.event-type} = "pull_request" ];then
+            exit 0
+          fi
           echo "Checking for app-deploy.yaml"
           APP_DEPLOY_YAML=$(find /workspace/git-source -name ${YAMLFILE} -type f)
           if [ -z "$APP_DEPLOY_YAML" ]; then
